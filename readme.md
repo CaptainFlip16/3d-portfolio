@@ -84,3 +84,11 @@ The optimized static build files will be generated in the `dist/` or `build/` fo
 ## 📝 License
 
 Distributed under the MIT License. See `LICENSE` for more information.
+
+---
+
+<div align="center">
+
+Crafted with ❤️ by **Muhammad Ahmad Shafique**
+
+</div>
