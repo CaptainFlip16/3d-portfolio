@@ -13,6 +13,84 @@ export default class Resources extends EventEmitter
         this.loader = new Loader()
         this.items = {}
 
+        // --- HUD DOM Elements ---
+        this.hudOverlay = document.querySelector('.js-hud-overlay')
+        this.hudLoader = document.querySelector('.js-hud-loader')
+        this.hudProgressBar = document.querySelector('.js-hud-progress-bar')
+        this.hudProgressText = document.querySelector('.js-hud-progress-text')
+        this.hudStartBtn = document.querySelector('.js-hud-start-btn')
+
+        // --- HUD Loading Events ---
+        this.on('progress', (_ratio) =>
+        {
+            const percentage = Math.round(_ratio * 100)
+
+            if (this.hudProgressBar)
+            {
+                this.hudProgressBar.style.width = `${percentage}%`
+            }
+            if (this.hudProgressText)
+            {
+                this.hudProgressText.textContent = `INITIALIZING WORLD SYSTEM ${percentage}%`
+            }
+        })
+
+        this.on('ready', () =>
+        {
+            // Hide progress loader & show Start Engine button
+            if (this.hudLoader)
+            {
+                this.hudLoader.style.display = 'none'
+            }
+            if (this.hudStartBtn)
+            {
+                this.hudStartBtn.classList.remove('is-hidden')
+            }
+        })
+
+        // --- Start Engine Button Interaction ---
+
+if (this.hudStartBtn)
+{
+    this.hudStartBtn.addEventListener('click', () =>
+    {
+        this.hudStartBtn.classList.add('is-pressed')
+
+        // 1. Simulate a click on the 3D WebGL Canvas to trigger the 3D "Click Here to Start" tile
+        const canvas = document.querySelector('canvas.canvas') || document.querySelector('canvas')
+        if (canvas)
+        {
+            const clickEvent = new MouseEvent('click', {
+                clientX: window.innerWidth / 2,
+                clientY: window.innerHeight / 2,
+                bubbles: true
+            })
+            canvas.dispatchEvent(clickEvent)
+        }
+
+        // 2. Resume Web Audio Context (for sound effects)
+        if (THREE.AudioContext && THREE.AudioContext.getContext)
+        {
+            const audioCtx = THREE.AudioContext.getContext()
+            if (audioCtx.state === 'suspended')
+            {
+                audioCtx.resume()
+            }
+        }
+
+        // 3. Fade out the HUD overlay
+        if (this.hudOverlay)
+        {
+            this.hudOverlay.classList.add('is-fading')
+            setTimeout(() =>
+            {
+                this.hudOverlay.style.display = 'none'
+            }, 800)
+        }
+    })
+}
+
+        // --- Asset Loading List ---
         this.loader.load([
             // Matcaps
             { name: 'matcapBeige', source: './models/matcaps/beige.png', type: 'texture' },
@@ -28,7 +106,6 @@ export default class Resources extends EventEmitter
             { name: 'matcapBlue', source: './models/matcaps/blue.png', type: 'texture' },
             { name: 'matcapYellow', source: './models/matcaps/yellow.png', type: 'texture' },
             { name: 'matcapMetal', source: './models/matcaps/metal.png', type: 'texture' },
-            // { name: 'matcapGold', source: './models/matcaps/gold.png', type: 'texture' },
 
             // Custom Flag
             { name: 'pakistanFlag', source: pakistanFlagImg, type: 'texture' },
@@ -76,7 +153,7 @@ export default class Resources extends EventEmitter
             { name: 'introDevBase', source: './models/intro/dev/base.glb' },
             { name: 'introDevCollision', source: './models/intro/dev/collision.glb' },
 
-            // Intro
+            // Crossroads
             { name: 'crossroadsStaticBase', source: './models/crossroads/static/base.glb' },
             { name: 'crossroadsStaticCollision', source: './models/crossroads/static/collision.glb' },
             { name: 'crossroadsStaticFloorShadow', source: './models/crossroads/static/floorShadow.png', type: 'texture' },
@@ -87,10 +164,8 @@ export default class Resources extends EventEmitter
             { name: 'carDefaultBackLightsBrake', source: './models/car/default/backLightsBrake.glb' },
             { name: 'carDefaultBackLightsReverse', source: './models/car/default/backLightsReverse.glb' },
             { name: 'carDefaultAntena', source: './models/car/default/antena.glb' },
-            // { name: 'carDefaultBunnyEarLeft', source: './models/car/default/bunnyEarLeft.glb' },
-            // { name: 'carDefaultBunnyEarRight', source: './models/car/default/bunnyEarRight.glb' },
 
-            // Car default
+            // Car CyberTruck
             { name: 'carCyberTruckChassis', source: './models/car/cyberTruck/chassis.glb' },
             { name: 'carCyberTruckWheel', source: './models/car/cyberTruck/wheel.glb' },
             { name: 'carCyberTruckBackLightsBrake', source: './models/car/cyberTruck/backLightsBrake.glb' },
@@ -116,12 +191,9 @@ export default class Resources extends EventEmitter
             { name: 'projectsMadboxFloor', source: './models/projects/madbox/floorTexture.png', type: 'texture' },
             { name: 'projectsScoutFloor', source: './models/projects/scout/floorTexture.png', type: 'texture' },
             { name: 'projectsChartogneFloor', source: './models/projects/chartogne/floorTexture.png', type: 'texture' },
-            // { name: 'projectsZenlyFloor', source: './models/projects/zenly/floorTexture.png', type: 'texture' },
             { name: 'projectsCitrixRedbullFloor', source: './models/projects/citrixRedbull/floorTexture.png', type: 'texture' },
             { name: 'projectsPriorHoldingsFloor', source: './models/projects/priorHoldings/floorTexture.png', type: 'texture' },
             { name: 'projectsOranoFloor', source: './models/projects/orano/floorTexture.png', type: 'texture' },
-            // { name: 'projectsGleecChatFloor', source: './models/projects/gleecChat/floorTexture.png', type: 'texture' },
-            // { name: 'projectsKepplerFloor', source: './models/projects/keppler/floorTexture.png', type: 'texture' },
 
             // Information
             { name: 'informationStaticBase', source: './models/information/static/base.glb' },
@@ -151,29 +223,6 @@ export default class Resources extends EventEmitter
             { name: 'hornBase', source: './models/horn/base.glb' },
             { name: 'hornCollision', source: './models/horn/collision.glb' },
 
-            // // Distinction A
-            // { name: 'distinctionAStaticBase', source: './models/distinctionA/static/base.glb' },
-            // { name: 'distinctionAStaticCollision', source: './models/distinctionA/static/collision.glb' },
-            // { name: 'distinctionAStaticFloorShadow', source: './models/distinctionA/static/floorShadow.png', type: 'texture' },
-
-            // // Distinction B
-            // { name: 'distinctionBStaticBase', source: './models/distinctionB/static/base.glb' },
-            // { name: 'distinctionBStaticCollision', source: './models/distinctionB/static/collision.glb' },
-            // { name: 'distinctionBStaticFloorShadow', source: './models/distinctionB/static/floorShadow.png', type: 'texture' },
-
-            // // Distinction C
-            // { name: 'distinctionCStaticBase', source: './models/distinctionC/static/base.glb' },
-            // { name: 'distinctionCStaticCollision', source: './models/distinctionC/static/collision.glb' },
-            // { name: 'distinctionCStaticFloorShadow', source: './models/distinctionC/static/floorShadow.png', type: 'texture' },
-
-            // // Cone
-            // { name: 'coneBase', source: './models/cone/base.glb' },
-            // { name: 'coneCollision', source: './models/cone/collision.glb' },
-
-            // // Awwwards trophy
-            // { name: 'awwwardsTrophyBase', source: './models/awwwardsTrophy/base.glb' },
-            // { name: 'awwwardsTrophyCollision', source: './models/awwwardsTrophy/collision.glb' },
-
             // Webby trophy
             { name: 'webbyTrophyBase', source: './models/webbyTrophy/base.glb' },
             { name: 'webbyTrophyCollision', source: './models/webbyTrophy/collision.glb' },
@@ -182,11 +231,11 @@ export default class Resources extends EventEmitter
             { name: 'lemonBase', source: './models/lemon/base.glb' },
             { name: 'lemonCollision', source: './models/lemon/collision.glb' },
 
-            // Bownling ball
+            // Bowling ball
             { name: 'bowlingBallBase', source: './models/bowlingBall/base.glb' },
             { name: 'bowlingBallCollision', source: './models/bowlingBall/collision.glb' },
 
-            // Bownling ball
+            // Bowling pin
             { name: 'bowlingPinBase', source: './models/bowlingPin/base.glb' },
             { name: 'bowlingPinCollision', source: './models/bowlingPin/collision.glb' },
 
@@ -222,10 +271,6 @@ export default class Resources extends EventEmitter
             { name: 'wig2', source: './models/wigs/wig2.glb' },
             { name: 'wig3', source: './models/wigs/wig3.glb' },
             { name: 'wig4', source: './models/wigs/wig4.glb' },
-
-            // // Egg
-            // { name: 'eggBase', source: './models/egg/base.glb' },
-            // { name: 'eggCollision', source: './models/egg/collision.glb' },
         ])
 
         this.loader.on('fileEnd', (_resource, _data) =>
@@ -233,7 +278,7 @@ export default class Resources extends EventEmitter
             this.items[_resource.name] = _data
 
             // Texture
-            if(_resource.type === 'texture')
+            if (_resource.type === 'texture')
             {
                 const texture = new THREE.Texture(_data)
                 texture.needsUpdate = true

@@ -37,6 +37,7 @@ export default class Application
         this.setWorld()
         this.setTitle()
         this.setThreejsJourney()
+        this.setHud()
     }
 
     /**
@@ -86,9 +87,7 @@ export default class Application
             alpha: true,
             powerPreference: 'high-performance'
         })
-        // this.renderer.setClearColor(0x414141, 1)
         this.renderer.setClearColor(0x000000, 1)
-        // this.renderer.setPixelRatio(Math.min(Math.max(window.devicePixelRatio, 1.5), 2))
         this.renderer.setPixelRatio(2)
         this.renderer.setSize(this.sizes.viewport.width, this.sizes.viewport.height)
         this.renderer.autoClear = false
@@ -133,7 +132,6 @@ export default class Application
         if(this.debug)
         {
             this.passes.debugFolder = this.debug.addFolder('postprocess')
-            // this.passes.debugFolder.open()
         }
 
         this.passes.composer = new EffectComposer(this.renderer)
@@ -199,8 +197,6 @@ export default class Application
 
             // Renderer
             this.passes.composer.render()
-            // this.renderer.domElement.style.background = 'black'
-            // this.renderer.render(this.scene, this.camera.instance)
         })
 
         // Resize event
@@ -235,6 +231,68 @@ export default class Application
     }
 
     /**
+     * Set HUD Overlay Interaction & Bypasses Intro Tile
+     */
+    setHud()
+    {
+        const hudStartBtn = document.querySelector('.hud-start-btn')
+        const hudOverlay = document.querySelector('.hud-overlay')
+
+        if (hudStartBtn)
+        {
+            hudStartBtn.addEventListener('click', () =>
+            {
+                hudStartBtn.classList.add('is-pressed')
+
+                // 1. Direct call to bypass and clear 3D Intro tile mesh
+                if (this.world && this.world.intro && typeof this.world.intro.start === 'function')
+                {
+                    this.world.intro.start()
+                }
+                else if (this.world && typeof this.world.start === 'function')
+                {
+                    this.world.start()
+                }
+
+                // 2. Clear initial camera blur passes
+                if (this.passes)
+                {
+                    if (this.passes.horizontalBlurPass)
+                    {
+                        this.passes.horizontalBlurPass.strength = 0
+                        this.passes.horizontalBlurPass.material.uniforms.uStrength.value.set(0, 0)
+                    }
+                    if (this.passes.verticalBlurPass)
+                    {
+                        this.passes.verticalBlurPass.strength = 0
+                        this.passes.verticalBlurPass.material.uniforms.uStrength.value.set(0, 0)
+                    }
+                }
+
+                // 3. Enable Web Audio Context if present
+                if (THREE.AudioContext && THREE.AudioContext.getContext)
+                {
+                    const audioCtx = THREE.AudioContext.getContext()
+                    if (audioCtx.state === 'suspended')
+                    {
+                        audioCtx.resume()
+                    }
+                }
+
+                // 4. Smoothly fade out HUD overlay
+                if (hudOverlay)
+                {
+                    hudOverlay.classList.add('is-fading')
+                    setTimeout(() =>
+                    {
+                        hudOverlay.style.display = 'none'
+                    }, 800)
+                }
+            })
+        }
+    }
+
+    /**
      * Set title
      */
     setTitle()
@@ -259,8 +317,10 @@ export default class Application
             }
         })
 
+        let step = 0
         window.setInterval(() =>
         {
+            step++
             this.title.position = Math.round(this.title.absolutePosition % this.title.width)
 
             document.title = `Ahmad ${'_'.repeat(step % 10)}🚗${'_'.repeat(10 - (step % 10))}`
@@ -289,6 +349,6 @@ export default class Application
 
         this.camera.orbitControls.dispose()
         this.renderer.dispose()
-        this.debug.destroy()
+        if(this.debug) this.debug.destroy()
     }
 }

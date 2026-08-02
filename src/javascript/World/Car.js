@@ -79,9 +79,39 @@ export default class Car
         this.movement.localAcceleration = new THREE.Vector3()
         this.movement.lastScreech = 0
 
+        // Listen for Space key to trigger brake action
+        window.addEventListener('keydown', (_event) =>
+        {
+            if(_event.code === 'Space')
+            {
+                if(this.controls && this.controls.actions) this.controls.actions.brake = true
+                if(this.physics && this.physics.controls && this.physics.controls.actions) this.physics.controls.actions.brake = true
+            }
+        })
+
+        window.addEventListener('keyup', (_event) =>
+        {
+            if(_event.code === 'Space')
+            {
+                if(this.controls && this.controls.actions) this.controls.actions.brake = false
+                if(this.physics && this.physics.controls && this.physics.controls.actions) this.physics.controls.actions.brake = false
+            }
+        })
+
         // Time tick
         this.time.on('tick', () =>
         {
+            // Apply braking force & rapid deceleration when Space (brake) is active
+            const isBraking = (this.controls && this.controls.actions && this.controls.actions.brake) || 
+                              (this.physics && this.physics.controls && this.physics.controls.actions && this.physics.controls.actions.brake)
+
+            if(isBraking && this.physics && this.physics.car && this.physics.car.chassis)
+            {
+                this.physics.car.chassis.body.velocity.x *= 0.85
+                this.physics.car.chassis.body.velocity.y *= 0.85
+                this.physics.car.chassis.body.angularVelocity.z *= 0.85
+            }
+
             // Movement
             const movementSpeed = new THREE.Vector3()
             movementSpeed.copy(this.chassis.object.position).sub(this.chassis.oldPosition)

@@ -1,97 +1,115 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
 
-    <title>Ahmad Shafique - Portfolio</title>
-    <meta name="description" content="Interactive 3D sci-fi game - Drive through the grid to locate and unlock all 3 Energy Nodes." />
+    <title>Ahmad Shafique — 3D Portfolio Experience</title>
+    <meta name="description" content="Interactive 3D driving portfolio built with Three.js & WebGL by Ahmad Shafique." />
 
-    <meta itemprop=name content="CYBER-DRIFT: PROJECT ZERO">
-    <meta itemprop="description" content="Interactive 3D sci-fi game - Drive through the grid to locate and unlock all 3 Energy Nodes.">
-    <meta itemprop="image" content=https://bruno-simon.com/social/share-1200x630.png>
-
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="CYBER-DRIFT: PROJECT ZERO">
-    <meta name="twitter:description" content="Interactive 3D sci-fi game - Drive through the grid to locate and unlock all 3 Energy Nodes.">
-    <meta name="twitter:image" content="https://bruno-simon.com/social/share-1200x600.png">
-
-    <meta property="og:site_name" content="CYBER-DRIFT: PROJECT ZERO">
+    <!-- Open Graph / Meta Branding -->
+    <meta property="og:site_name" content="Ahmad Shafique - 3D Portfolio">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://bruno-simon.com">
-    <meta property="og:title" content="CYBER-DRIFT: PROJECT ZERO">
-    <meta property="og:description" content="Interactive 3D sci-fi game - Drive through the grid to locate and unlock all 3 Energy Nodes.">
-    <meta property="og:image" content="https://bruno-simon.com/social/share-1200x630.png">
+    <meta property="og:title" content="Ahmad Shafique - 3D Web Portfolio">
+    <meta property="og:description" content="Explore my creative work, CS experience, and interactive 3D map.">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <!-- Favicons -->
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
     <link rel="manifest" href="/favicon/site.webmanifest">
-    <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg" color="#ff8908">
-    <meta name="apple-mobile-web-app-title" content="CYBER-DRIFT: PROJECT ZERO">
-    <meta name="application-name" content="CYBER-DRIFT: PROJECT ZERO">
-    <meta name="msapplication-TileColor" content="#da532c">
-    <meta name="theme-color" content="#ffffff">
+    <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg" color="#00f3ff">
+    <meta name="theme-color" content="#08090c">
     
+    <!-- Modern Tech & Display Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=block" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="./style/main.css">
 </head>
 <body>
 
+    <!-- 3D Canvas -->
     <canvas class="canvas js-canvas"></canvas>
 
-    <!-- <div class="threejs-journey is-hover-none js-threejs-journey">
-        <div class="message js-message">
-            <div class="boy">
-                <div class="variant is-hi">
-                    <div class="body"></div>
-                    <div class="arm js-boy-arm"></div>
+    <!-- Sleek Floating HUD Loading Overlay -->
+    <div class="hud-overlay js-hud-overlay">
+        
+        <!-- Corner Tech Brackets -->
+        <div class="hud-corner top-left"></div>
+        <div class="hud-corner top-right"></div>
+        <div class="hud-corner bottom-left"></div>
+        <div class="hud-corner bottom-right"></div>
+
+        <!-- Top Header HUD Tag with Circular Driver Avatar -->
+        <div class="hud-header">
+            <div class="hud-avatar-wrapper">
+                <!-- Replace 'path/to/your-photo.jpg' with your actual image path -->
+                <img src="/assets/profile.jpg" alt="Ahmad Shafique" class="hud-avatar-img">
+                <div class="hud-avatar-ring"></div>
+            </div>
+            
+            <div class="hud-driver-details">
+                <div class="hud-badge">
+                    <span class="hud-status-dot"></span>
+                    <span class="hud-driver">DRIVER // AHMAD SHAFIQUE</span>
                 </div>
-                <div class="variant is-yay"></div>
-                <div class="variant is-shrugging"></div>
-            </div>
-            <div class="bubble">
-                <div class="text">MISSION: Drive through the grid to locate and unlock all 3 Energy Nodes.</div>
-                <div class="tip"></div>
+                <div class="hud-subline">CREATIVE WEB DEVELOPER • CS STUDENT • AI ENGINEER</div>
             </div>
         </div>
-        <div class="message js-message">
-            <div class="bubble">
-                <div class="text">Use WASD or arrow keys to move your vehicle.</div>
-                <div class="tip"></div>
+
+        <!-- Center Hero Section -->
+        <div class="hud-center">
+            <h1 class="hud-title">3D PORTFOLIO EXPERIENCE</h1>
+            <p class="hud-subtitle">DRIVE THROUGH THE GRID TO EXPLORE PROJECTS & SKILLS</p>
+
+            <!-- Loading Indicator -->
+            <div class="hud-loader js-hud-loader">
+                <div class="hud-progress-track">
+                    <div class="hud-progress-bar js-hud-progress-bar"></div>
+                </div>
+                <span class="hud-progress-text js-hud-progress-text">INITIALIZING WORLD SYSTEM 0%</span>
+            </div>
+
+            <!-- Start Button (Revealed when loading completes) -->
+            <button class="hud-start-btn js-hud-start-btn is-hidden">
+                <span class="hud-btn-glow"></span>
+                <span class="hud-btn-text">START ENGINE</span>
+            </button>
+        </div>
+
+        <!-- Bottom Telemetry & Controls HUD -->
+        <div class="hud-footer">
+            <div class="hud-controls">
+                <div class="hud-key-group">
+                    <div class="key-cluster">
+                        <span class="hud-key">W</span>
+                        <div class="key-row">
+                            <span class="hud-key">A</span>
+                            <span class="hud-key">S</span>
+                            <span class="hud-key">D</span>
+                        </div>
+                    </div>
+                    <span class="hud-key-label">DRIVE</span>
+                </div>
+
+                <div class="hud-key-group">
+                    <span class="hud-key wide">ENTER</span>
+                    <span class="hud-key-label">INTERACT</span>
+                </div>
+            </div>
+
+            <div class="hud-telemetry">
+                <span>LOCATION: PAKISTAN [PK]</span>
+                <span>ENGINE: THREE.JS / WEBGL</span>
             </div>
         </div>
-        <div class="message js-message is-answers">
-            <a href="#" class="answer is-no js-no">
-                <span class="background"></span>
-                <span class="hover"></span>
-                <span class="label">Cancel</span>
-            </a>
-            <a href="#" class="answer is-yes js-yes">
-                <span class="background"></span>
-                <span class="hover"></span>
-                <span class="label">Start Mission</span>
-            </a>
-        </div>
-        <div class="message js-message">
-            <div class="bubble">
-                <div class="text">Good luck, pilot. The grid awaits.</div>
-                <div class="tip"></div>
-            </div>
-        </div>
-    </div> -->
+
+    </div>
 
     <script type="module" src="./index.js"></script>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-3966601-5"></script>
-    <script>
-        window.dataLayer = window.dataLayer || []
-        function gtag(){dataLayer.push(arguments)}
-        gtag('js', new Date())
-        gtag('config', 'UA-3966601-5')
-    </script>
 
 </body>
 </html>

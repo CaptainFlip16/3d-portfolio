@@ -14,6 +14,7 @@ html
     width: 100%;
     height: 100%;
     overflow: hidden;
+    background-color: #08090c;
 }
 
 .canvas
@@ -40,6 +41,10 @@ html
     cursor: pointer;
 }
 
+/* ==========================================================================
+   THREEJS JOURNEY / MESSAGES STYLES
+   ========================================================================== */
+
 .threejs-journey
 {
     display: none;
@@ -51,6 +56,7 @@ html
     width: 420px;
     -webkit-user-select: none;
     user-select: none;
+    z-index: 10;
 }
 
 .threejs-journey.is-active
@@ -63,7 +69,6 @@ html
     position: absolute;
     bottom: 0;
     right: 0;
-    /* width: 100%; */
     font-family: 'Comic Neue', cursive;
     font-weight: 700;
     color: #ffffff;
@@ -265,5 +270,287 @@ html
 {
     transform-origin: 100% 0;
     opacity: 0.2;
+}
+
+/* ==========================================================================
+   HUD OVERLAY LOADING SCREEN STYLES
+   ========================================================================== */
+
+.hud-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(8, 9, 12, 0.82);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 2.5rem;
+    box-sizing: border-box;
+    font-family: 'Rajdhani', 'Montserrat', sans-serif;
+    color: #ffffff;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+.hud-overlay.is-fading {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+/* Corner Tech Brackets */
+.hud-corner {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    border-color: #00f3ff;
+    border-style: solid;
+    opacity: 0.7;
+}
+
+.hud-corner.top-left { top: 20px; left: 20px; border-width: 2px 0 0 2px; }
+.hud-corner.top-right { top: 20px; right: 20px; border-width: 2px 2px 0 0; }
+.hud-corner.bottom-left { bottom: 20px; left: 20px; border-width: 0 0 2px 2px; }
+.hud-corner.bottom-right { bottom: 20px; right: 20px; border-width: 0 2px 2px 0; }
+
+/* Top Header */
+.hud-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.hud-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.hud-status-dot {
+    width: 8px;
+    height: 8px;
+    background-color: #00f3ff;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #00f3ff;
+    animation: pulseDot 1.8s infinite;
+}
+
+.hud-driver {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: 0.95rem;
+    letter-spacing: 2px;
+    color: #00f3ff;
+}
+
+.hud-subline {
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    color: #a0aab8;
+    font-weight: 600;
+}
+
+/* Center Content */
+.hud-center {
+    text-align: center;
+    max-width: 680px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.hud-title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-size: 2.6rem;
+    letter-spacing: 4px;
+    margin: 0 0 0.5rem 0;
+    text-shadow: 0 0 20px rgba(0, 243, 255, 0.35);
+    background: linear-gradient(180deg, #ffffff 30%, #a5f3fc 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hud-subtitle {
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+    color: #8a96a8;
+    margin-bottom: 2.2rem;
+    font-weight: 600;
+}
+
+/* Progress Bar */
+.hud-loader {
+    width: 100%;
+    max-width: 360px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.hud-progress-track {
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.hud-progress-bar {
+    width: 0%;
+    height: 100%;
+    background: #00f3ff;
+    box-shadow: 0 0 10px #00f3ff;
+    transition: width 0.2s ease;
+}
+
+.hud-progress-text {
+    font-size: 0.8rem;
+    letter-spacing: 1.5px;
+    color: #7a8698;
+    font-weight: 600;
+}
+
+/* Start Engine Button */
+.hud-start-btn {
+    position: relative;
+    padding: 1rem 3rem;
+    background: rgba(0, 243, 255, 0.05);
+    border: 1px solid #00f3ff;
+    color: #ffffff;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+    letter-spacing: 3px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.2s ease;
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+    border-radius: 2px;
+}
+
+.hud-start-btn:hover {
+    background: #00f3ff;
+    color: #08090c;
+    box-shadow: 0 0 35px rgba(0, 243, 255, 0.7);
+    transform: translateY(-2px);
+}
+
+/* Active / Pressed effect on START ENGINE */
+.hud-start-btn:active,
+.hud-start-btn.is-pressed {
+    background: #00f3ff;
+    color: #08090c;
+    transform: scale(0.95);
+    box-shadow: 0 0 50px rgba(0, 243, 255, 1);
+    filter: brightness(1.3);
+}
+
+.hud-start-btn.is-hidden {
+    display: none;
+}
+
+/* Footer & Keycap Badges */
+.hud-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.hud-controls {
+    display: flex;
+    gap: 2rem;
+}
+
+.hud-key-group {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.key-cluster {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+}
+
+.key-row {
+    display: flex;
+    gap: 3px;
+}
+
+.hud-key {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(0, 243, 255, 0.3);
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #00f3ff;
+}
+
+.hud-key.wide {
+    width: auto;
+    padding: 0 10px;
+}
+
+.hud-key-label {
+    font-size: 0.85rem;
+    letter-spacing: 1.5px;
+    color: #8a96a8;
+    font-weight: 600;
+}
+
+.hud-telemetry {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    font-size: 0.75rem;
+    letter-spacing: 1.5px;
+    color: #5b6778;
+    font-weight: 600;
+}
+
+/* ==========================================================================
+   SUPPRESS INTERMEDIATE / SECONDARY START SCREENS
+   ========================================================================== */
+
+.js-start,
+.start,
+#start,
+.js-intro-start,
+.touch-to-start,
+.intro-start,
+.click-to-start {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
+@keyframes pulseDot {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+}
+
+@media (max-width: 768px) {
+    .hud-overlay { padding: 1.5rem; }
+    .hud-title { font-size: 1.8rem; }
+    .hud-footer { flex-direction: column; align-items: flex-start; gap: 1rem; }
+    .hud-telemetry { align-items: flex-start; }
 }
 
